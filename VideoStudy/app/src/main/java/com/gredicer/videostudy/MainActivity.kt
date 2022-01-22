@@ -5,9 +5,6 @@ import android.os.Bundle
 
 import android.widget.VideoView
 
-
-
-
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
