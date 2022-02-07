@@ -1,5 +1,6 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
     <style name="Theme.VideoStudy" parent="Theme.Design.Light.NoActionBar">
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowTranslucentStatus">true</item>
@@ -8,13 +9,4 @@
         <!-- Android 6.0以上 状态栏字色和图标为浅黑色-->
         <item name="android:windowLightStatusBar">true</item>
     </style>
-
-    <style name="Theme.VideoStudy.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="Theme.VideoStudy.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.VideoStudy.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

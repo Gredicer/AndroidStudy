@@ -46,4 +46,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     // ViewBinding
     implementation 'com.github.DylanCaiCoding.ViewBindingKTX:viewbinding-base:2.0.1'
+    // ShapeView
+    implementation 'com.github.getActivity:ShapeView:6.2'
 }
