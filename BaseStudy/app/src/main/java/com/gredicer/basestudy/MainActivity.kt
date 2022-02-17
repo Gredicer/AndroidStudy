@@ -2,7 +2,6 @@ package com.gredicer.basestudy
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import com.gredicer.basestudy.base.BaseBindingActivity
 import com.gredicer.basestudy.databinding.ActivityMainBinding
 import com.gredicer.basestudy.util.DarkModeUtils

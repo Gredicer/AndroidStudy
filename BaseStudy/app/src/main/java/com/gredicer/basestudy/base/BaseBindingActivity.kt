@@ -1,5 +1,6 @@
 package com.gredicer.basestudy.base
 
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,7 @@ import com.dylanc.viewbinding.base.ViewBindingUtil
 import com.gredicer.basestudy.event.BindEventBus
 import com.gredicer.basestudy.event.EventBusUtils
 import com.gredicer.basestudy.util.DarkModeUtils
+
 
 /**
  * author : Gredicer

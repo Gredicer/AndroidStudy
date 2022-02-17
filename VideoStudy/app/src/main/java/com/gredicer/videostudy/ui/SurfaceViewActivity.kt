@@ -43,7 +43,7 @@ class SurfaceViewActivity : BaseBindingActivity<ActivitySurfaceViewBinding>(), M
         try {
             mediaPlayer!!.setDataSource(videoPath)
             mediaPlayer!!.setOnBufferingUpdateListener(this)
-            //mediaPlayer.prepare();
+            // mediaPlayer.prepare();
             controller!!.setMediaPlayer(this)
             controller!!.isEnabled = true
         } catch (e: IOException) {
@@ -71,10 +71,10 @@ class SurfaceViewActivity : BaseBindingActivity<ActivitySurfaceViewBinding>(), M
         return super.onTouchEvent(event)
     }
 
-    //MediaPlayer
+    // MediaPlayer
     override fun onPointerCaptureChanged(hasCapture: Boolean) {}
 
-    //MediaPlayerControl
+    // MediaPlayerControl
     override fun onBufferingUpdate(mediaPlayer: MediaPlayer?, i: Int) {
         bufferPercentage = i
     }
@@ -127,7 +127,7 @@ class SurfaceViewActivity : BaseBindingActivity<ActivitySurfaceViewBinding>(), M
         return 0
     }
 
-    //SurfaceHolder.callback
+    // SurfaceHolder.callback
     override fun surfaceCreated(p0: SurfaceHolder) {
         mediaPlayer!!.setDisplay(p0)
         mediaPlayer!!.prepareAsync()
@@ -145,20 +145,20 @@ class SurfaceViewActivity : BaseBindingActivity<ActivitySurfaceViewBinding>(), M
         var videoWidth = mediaPlayer!!.videoWidth
         var videoHeight = mediaPlayer!!.videoHeight
 
-        //根据视频尺寸去计算->视频可以在sufaceView中放大的最大倍数。
+        // 根据视频尺寸去计算->视频可以在sufaceView中放大的最大倍数。
         val max: Float = if (resources.configuration.orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-            //竖屏模式下按视频宽度计算放大倍数值
+            // 竖屏模式下按视频宽度计算放大倍数值
             (videoWidth.toFloat() / videoSuf?.width!!).coerceAtLeast(videoHeight.toFloat() / videoSuf?.height!!)
         } else {
-            //横屏模式下按视频高度计算放大倍数值
+            // 横屏模式下按视频高度计算放大倍数值
             (videoWidth.toFloat() / videoSuf?.height!!).coerceAtLeast(videoHeight.toFloat() / videoSuf?.width!!)
         }
 
-        //视频宽高分别/最大倍数值 计算出放大后的视频尺寸
+        // 视频宽高分别/最大倍数值 计算出放大后的视频尺寸
         videoWidth = kotlin.math.ceil((videoWidth.toFloat() / max).toDouble()).toInt()
         videoHeight = kotlin.math.ceil((videoHeight.toFloat() / max).toDouble()).toInt()
 
-        //无法直接设置视频尺寸，将计算出的视频尺寸设置到surfaceView 让视频自动填充。
+        // 无法直接设置视频尺寸，将计算出的视频尺寸设置到surfaceView 让视频自动填充。
         videoSuf!!.layoutParams = LinearLayout.LayoutParams(videoWidth, videoHeight)
     }
 
