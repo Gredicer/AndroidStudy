@@ -4,6 +4,159 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".CameraActivity">
 
+    <androidx.camera.view.PreviewView
+        android:id="@+id/previewView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="V,9:16"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageButton
+        android:id="@+id/camera_button"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/ic_switch"
+        android:contentDescription="相机"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toTopOf="@+id/capture_status"
+        app:layout_constraintEnd_toStartOf="@+id/capture_button"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="ImageContrastCheck" />
+
+    <ImageButton
+        android:id="@+id/capture_button"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/ic_start"
+        android:contentDescription="录制"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@+id/camera_button"
+        app:layout_constraintEnd_toEndOf="@+id/vertical_guideline"
+        app:layout_constraintStart_toStartOf="@id/vertical_guideline"
+        app:layout_constraintTop_toTopOf="@+id/camera_button"
+        tools:ignore="ImageContrastCheck" />
+
+    <ImageButton
+        android:id="@+id/stop_button"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/ic_stop"
+        android:contentDescription="停止"
+        android:scaleType="fitCenter"
+        android:translationX="48dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/capture_button"
+        app:layout_constraintStart_toEndOf="@+id/capture_button"
+        app:layout_constraintTop_toTopOf="@+id/capture_button"
+        tools:ignore="ImageContrastCheck" />
+
+    <TextView
+        android:id="@+id/capture_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="47dp"
+        android:background="@color/transparent"
+        android:lines="2"
+        android:maxLines="2"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/camera_button" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vertical_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.50" />
+
+
+    <com.angcyo.tablayout.DslTabLayout
+        android:id="@+id/tab_quality"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginHorizontal="50dp"
+        android:background="@color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tab_border_draw_item_background="false"
+        app:tab_border_radius_size="18dp"
+        app:tab_border_solid_color="@color/transparent"
+        app:tab_border_stroke_color="@color/white"
+        app:tab_border_stroke_width="1dp"
+        app:tab_deselect_color="@color/white"
+        app:tab_draw_border="true"
+        app:tab_draw_divider="true"
+        app:tab_draw_indicator="true"
+        app:tab_enable_gradient_color="true"
+        app:tab_indicator_dash_gap="20dp"
+        app:tab_indicator_dash_width="20dp"
+        app:tab_indicator_drawable="@drawable/indicator_round_background"
+        app:tab_indicator_enable_flow="true"
+        app:tab_indicator_height_offset="-6dp"
+        app:tab_indicator_style="STYLE_BACKGROUND"
+        app:tab_indicator_width="MATCH_PARENT"
+        app:tab_indicator_width_offset="-6dp"
+        app:tab_item_auto_equ_width="true"
+        app:tab_select_color="@color/black" />
+
+
+    <com.angcyo.tablayout.DslTabLayout
+        android:id="@+id/tab_custom"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tab_quality"
+        app:tab_border_draw_item_background="false"
+        app:tab_border_radius_size="18dp"
+        app:tab_border_solid_color="@color/transparent"
+        app:tab_border_stroke_color="@color/white"
+        app:tab_border_stroke_width="1dp"
+        app:tab_deselect_color="@color/white"
+        app:tab_draw_border="true"
+        app:tab_draw_divider="true"
+        app:tab_draw_indicator="true"
+        app:tab_enable_gradient_color="true"
+        app:tab_indicator_dash_gap="20dp"
+        app:tab_indicator_dash_width="20dp"
+        app:tab_indicator_drawable="@drawable/indicator_round_background"
+        app:tab_indicator_enable_flow="true"
+        app:tab_indicator_height_offset="-6dp"
+        app:tab_indicator_style="STYLE_BACKGROUND"
+        app:tab_indicator_width="MATCH_PARENT"
+        app:tab_indicator_width_offset="-6dp"
+        app:tab_item_auto_equ_width="true"
+        app:tab_select_color="@color/black">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="9:16" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="16:9" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="4:3" />
+    </com.angcyo.tablayout.DslTabLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
