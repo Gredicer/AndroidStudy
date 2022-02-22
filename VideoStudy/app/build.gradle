@@ -33,6 +33,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+    namespace 'com.gredicer.videostudy'
 }
 
 dependencies {
@@ -48,4 +49,7 @@ dependencies {
     implementation 'com.github.DylanCaiCoding.ViewBindingKTX:viewbinding-base:2.0.1'
     // ShapeView
     implementation 'com.github.getActivity:ShapeView:6.2'
+
+    implementation 'com.daimajia.easing:library:2.4@aar'
+
 }

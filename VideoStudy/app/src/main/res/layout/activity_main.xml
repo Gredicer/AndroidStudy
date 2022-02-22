@@ -35,4 +35,11 @@
         app:shape_solidPressedColor="#AA5A8DDF" />
 
 
+    <TextView
+        android:id="@+id/test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="asdasd" />
+
 </androidx.appcompat.widget.LinearLayoutCompat>

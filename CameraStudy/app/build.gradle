@@ -32,6 +32,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+    namespace 'com.gredicer.camerastudy'
 }
 
 dependencies {
@@ -64,4 +65,6 @@ dependencies {
 
     // Tab
     implementation 'com.github.angcyo.DslTablayout:TabLayout:2.0.2'
+    // Android Tools
+    implementation 'com.blankj:utilcodex:1.31.0'
 }

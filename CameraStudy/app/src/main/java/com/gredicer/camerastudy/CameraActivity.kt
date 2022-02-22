@@ -3,15 +3,12 @@ package com.gredicer.camerastudy
 import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.Gravity
-import android.view.Surface
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.TextView
 import android.widget.Toast
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.Preview
@@ -25,16 +22,18 @@ import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenCreated
+import com.blankj.utilcode.util.ScreenUtils
 import com.gredicer.camerastudy.base.BaseBindingActivity
 import com.gredicer.camerastudy.databinding.ActivityCameraBinding
 import com.gredicer.camerastudy.extensions.getAspectRatio
-import com.gredicer.camerastudy.extensions.getAspectRatioString
 import com.gredicer.camerastudy.extensions.getNameString
+import com.gredicer.camerastudy.view.TipView
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class CameraActivity : BaseBindingActivity<ActivityCameraBinding>() {
 
@@ -71,8 +70,7 @@ class CameraActivity : BaseBindingActivity<ActivityCameraBinding>() {
                 val provider = ProcessCameraProvider.getInstance(this@CameraActivity).await()
                 provider.unbindAll()
                 for (camSelector in arrayOf(
-                    CameraSelector.DEFAULT_BACK_CAMERA,
-                    CameraSelector.DEFAULT_FRONT_CAMERA
+                    CameraSelector.DEFAULT_BACK_CAMERA, CameraSelector.DEFAULT_FRONT_CAMERA
                 )) {
                     try {
                         // 这里仅是获取摄像机的信息去获取 capability，没有去绑定任何东西
@@ -80,10 +78,7 @@ class CameraActivity : BaseBindingActivity<ActivityCameraBinding>() {
                             val camera = provider.bindToLifecycle(this@CameraActivity, camSelector)
                             QualitySelector.getSupportedQualities(camera.cameraInfo).filter {
                                 listOf(
-                                    Quality.UHD,
-                                    Quality.FHD,
-                                    Quality.HD,
-                                    Quality.SD
+                                    Quality.UHD, Quality.FHD, Quality.HD, Quality.SD
                                 ).contains(it)
                             }.also {
                                 cameraCapabilities.add(CameraCapability(camSelector, it))
@@ -94,7 +89,6 @@ class CameraActivity : BaseBindingActivity<ActivityCameraBinding>() {
                     }
                 }
             }
-
         }
     }
 
@@ -117,6 +111,11 @@ class CameraActivity : BaseBindingActivity<ActivityCameraBinding>() {
             initializeQualitySectionsUI()
             bindCaptureUseCase()
         }
+
+        val tipView = TipView(this)
+        tipView.isClickable = true // 防止点击事件被透传到 content_view
+        (window.decorView as ViewGroup).addView(tipView)
+
     }
 
     private fun initializeUI() {
@@ -185,25 +184,24 @@ class CameraActivity : BaseBindingActivity<ActivityCameraBinding>() {
 
     /** 初始化视频质量切换效果*/
     private fun initializeQualitySectionsUI() {
-        binding.tabQuality.removeAllViews()
-        val selectorStrings = cameraCapabilities[cameraIndex].qualities.map { it.getNameString() }
-        selectorStrings.forEach {
-            val textView = TextView(this).apply {
-                gravity = Gravity.CENTER
-                text = it
-            }
-            binding.tabQuality.addView(textView)
-        }
-
-        binding.tabQuality.configTabLayoutConfig {
-            //选中index的回调
-            onSelectIndexChange = { _, selectIndexList, reselect, fromUser ->
-                qualityIndex = selectIndexList.first()
-                enableUI(false)
-                lifecycleScope.launch { bindCaptureUseCase() }
-            }
-        }
-
+//        binding.tabQuality.removeAllViews()
+//        val selectorStrings = cameraCapabilities[cameraIndex].qualities.map { it.getNameString() }
+//        selectorStrings.forEach {
+//            val textView = TextView(this).apply {
+//                gravity = Gravity.CENTER
+//                text = it
+//            }
+//            binding.tabQuality.addView(textView)
+//        }
+//
+//        binding.tabQuality.configTabLayoutConfig {
+//            //选中index的回调
+//            onSelectIndexChange = { _, selectIndexList, reselect, fromUser ->
+//                qualityIndex = selectIndexList.first()
+//                enableUI(false)
+//                lifecycleScope.launch { bindCaptureUseCase() }
+//            }
+//        }
 
 
         binding.tabCustom.configTabLayoutConfig {
@@ -219,21 +217,18 @@ class CameraActivity : BaseBindingActivity<ActivityCameraBinding>() {
     private fun startRecording() {
         // create MediaStoreOutputOptions for our recorder: resulting our recording!
         val name = "CameraX-recording-" + SimpleDateFormat(
-            FILENAME_FORMAT,
-            Locale.CHINA
+            FILENAME_FORMAT, Locale.CHINA
         ).format(System.currentTimeMillis()) + ".mp4"
         val contentValues = ContentValues().apply {
             put(MediaStore.Video.Media.DISPLAY_NAME, name)
         }
-        val mediaStoreOutput = MediaStoreOutputOptions
-            .Builder(contentResolver, MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
-            .setContentValues(contentValues)
-            .build()
+        val mediaStoreOutput = MediaStoreOutputOptions.Builder(
+            contentResolver, MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+        ).setContentValues(contentValues).build()
 
         // configure Recorder and Start recording to the mediaStoreOutput.
-        currentRecording = videoCapture.output
-            .prepareRecording(this, mediaStoreOutput)
-            .start(mainThreadExecutor, captureListener)
+        currentRecording =
+            videoCapture.output.prepareRecording(this, mediaStoreOutput).start(mainThreadExecutor, captureListener)
 
         Log.i(TAG, "Recording started")
     }
@@ -265,19 +260,21 @@ class CameraActivity : BaseBindingActivity<ActivityCameraBinding>() {
         val qualitySelector = QualitySelector.from(quality)
 
         binding.previewView.updateLayoutParams<ConstraintLayout.LayoutParams> {
-            val orientation = resources.configuration.orientation
-            dimensionRatio = quality.getAspectRatioString(
-                quality,
-                (orientation == Configuration.ORIENTATION_PORTRAIT)
-            )
+            when (customRatio) {
+                0 -> dimensionRatio = "V,${ScreenUtils.getAppScreenWidth()}:${ScreenUtils.getAppScreenHeight()}"
+                1 -> dimensionRatio = "H,16:9"
+                2 -> dimensionRatio = "H,4:3"
+            }
+
         }
 
-        val preview = Preview.Builder()
-            .setTargetAspectRatio(quality.getAspectRatio(quality))
-            .build().apply { setSurfaceProvider(binding.previewView.surfaceProvider) }
+        val preview = Preview.Builder().setTargetAspectRatio(quality.getAspectRatio(quality)).build()
+            .apply { setSurfaceProvider(binding.previewView.surfaceProvider) }
 
         val recorder = Recorder.Builder().setQualitySelector(qualitySelector).build()
         videoCapture = VideoCapture.withOutput(recorder)
+
+
 
         try {
             cameraProvider.unbindAll()
@@ -327,9 +324,7 @@ class CameraActivity : BaseBindingActivity<ActivityCameraBinding>() {
      */
     private fun enableUI(enable: Boolean) {
         arrayOf(
-            binding.cameraButton,
-            binding.captureButton,
-            binding.stopButton
+            binding.cameraButton, binding.captureButton, binding.stopButton
         ).forEach {
             it.isEnabled = enable
         }
@@ -379,8 +374,7 @@ class CameraActivity : BaseBindingActivity<ActivityCameraBinding>() {
      * @param event VideoRecordEvent
      */
     private fun updateUI(event: VideoRecordEvent) {
-        val state =
-            if (event is VideoRecordEvent.Status) recordingState.getNameString() else event.getNameString()
+        val state = if (event is VideoRecordEvent.Status) recordingState.getNameString() else event.getNameString()
         when (event) {
             is VideoRecordEvent.Status -> {
                 // placeholder: we update the UI with new status after this when() block,
