@@ -18,6 +18,9 @@ import androidx.concurrent.futures.await
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.util.Consumer
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
@@ -115,6 +118,9 @@ class CameraActivity : BaseBindingActivity<ActivityCameraBinding>() {
         val tipView = TipView(this)
         tipView.isClickable = true // 防止点击事件被透传到 content_view
         (window.decorView as ViewGroup).addView(tipView)
+        tipView.setOnClickListener {
+            (window.decorView as ViewGroup).removeView(it)
+        }
 
     }
 
@@ -386,7 +392,6 @@ class CameraActivity : BaseBindingActivity<ActivityCameraBinding>() {
             is VideoRecordEvent.Resume -> binding.captureButton.setImageResource(R.drawable.ic_pause)
         }
     }
-
 
     companion object {
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"

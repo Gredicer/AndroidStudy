@@ -15,11 +15,13 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:text="VideoView"
-        android:textColor="@color/white"
+        android:textColor="@color/grey"
+        android:textStyle="bold"
         app:shape="rectangle"
         app:shape_radius="30dp"
-        app:shape_solidColor="#5A8DDF"
-        app:shape_solidPressedColor="#AA5A8DDF" />
+        app:shape_solidPressedColor="#AA5A8DDF"
+        app:shape_strokeColor="@color/grey"
+        app:shape_strokeWidth="2dp" />
 
     <com.hjq.shape.view.ShapeButton
         android:id="@+id/btn_surface_view"
@@ -28,11 +30,13 @@
         android:layout_marginTop="30dp"
         android:gravity="center"
         android:text="SurfaceView"
-        android:textColor="@color/white"
+        android:textColor="@color/grey"
+        android:textStyle="bold"
         app:shape="rectangle"
         app:shape_radius="30dp"
-        app:shape_solidColor="#5A8DDF"
-        app:shape_solidPressedColor="#AA5A8DDF" />
+        app:shape_solidPressedColor="#AA5A8DDF"
+        app:shape_strokeColor="@color/grey"
+        app:shape_strokeWidth="2dp" />
 
 
     <TextView
