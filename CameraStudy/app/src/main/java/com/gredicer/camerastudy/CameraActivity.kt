@@ -1,8 +1,10 @@
 package com.gredicer.camerastudy
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.pm.ActivityInfo
+import android.graphics.Rect
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -10,7 +12,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.camera.core.AspectRatio
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.*
@@ -18,9 +22,6 @@ import androidx.concurrent.futures.await
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.util.Consumer
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
@@ -162,22 +163,16 @@ class CameraActivity : BaseBindingActivity<ActivityCameraBinding>() {
         binding.stopButton.apply {
             setOnClickListener {
                 binding.stopButton.visibility = View.INVISIBLE
-                if (currentRecording == null || recordingState is VideoRecordEvent.Finalize) {
-                    return@setOnClickListener
-                }
+                if (currentRecording == null || recordingState is VideoRecordEvent.Finalize) return@setOnClickListener
                 val recording = currentRecording
-                if (recording != null) {
-                    recording.stop()
-                    currentRecording = null
-                }
+                recording?.stop()
+                currentRecording = null
                 binding.captureButton.setImageResource(R.drawable.ic_start)
             }
             // ensure the stop button is initialized disabled & invisible
             visibility = View.INVISIBLE
             isEnabled = false
         }
-
-
 
         captureLiveStatus.observe(this) {
             binding.captureStatus.apply {
@@ -190,26 +185,6 @@ class CameraActivity : BaseBindingActivity<ActivityCameraBinding>() {
 
     /** 初始化视频质量切换效果*/
     private fun initializeQualitySectionsUI() {
-//        binding.tabQuality.removeAllViews()
-//        val selectorStrings = cameraCapabilities[cameraIndex].qualities.map { it.getNameString() }
-//        selectorStrings.forEach {
-//            val textView = TextView(this).apply {
-//                gravity = Gravity.CENTER
-//                text = it
-//            }
-//            binding.tabQuality.addView(textView)
-//        }
-//
-//        binding.tabQuality.configTabLayoutConfig {
-//            //选中index的回调
-//            onSelectIndexChange = { _, selectIndexList, reselect, fromUser ->
-//                qualityIndex = selectIndexList.first()
-//                enableUI(false)
-//                lifecycleScope.launch { bindCaptureUseCase() }
-//            }
-//        }
-
-
         binding.tabCustom.configTabLayoutConfig {
             //选中index的回调
             onSelectIndexChange = { _, selectIndexList, reselect, fromUser ->
@@ -225,9 +200,7 @@ class CameraActivity : BaseBindingActivity<ActivityCameraBinding>() {
         val name = "CameraX-recording-" + SimpleDateFormat(
             FILENAME_FORMAT, Locale.CHINA
         ).format(System.currentTimeMillis()) + ".mp4"
-        val contentValues = ContentValues().apply {
-            put(MediaStore.Video.Media.DISPLAY_NAME, name)
-        }
+        val contentValues = ContentValues().apply { put(MediaStore.Video.Media.DISPLAY_NAME, name) }
         val mediaStoreOutput = MediaStoreOutputOptions.Builder(
             contentResolver, MediaStore.Video.Media.EXTERNAL_CONTENT_URI
         ).setContentValues(contentValues).build()
@@ -257,6 +230,7 @@ class CameraActivity : BaseBindingActivity<ActivityCameraBinding>() {
      * 这里需要总是打开 preview + video capture
      * 此函数需要总是执行在主线程上
      */
+    @SuppressLint("RestrictedApi")
     private suspend fun bindCaptureUseCase() {
         val cameraProvider = ProcessCameraProvider.getInstance(this).await()
         val cameraSelector = getCameraSelector(cameraIndex)
@@ -267,7 +241,7 @@ class CameraActivity : BaseBindingActivity<ActivityCameraBinding>() {
 
         binding.previewView.updateLayoutParams<ConstraintLayout.LayoutParams> {
             when (customRatio) {
-                0 -> dimensionRatio = "V,${ScreenUtils.getAppScreenWidth()}:${ScreenUtils.getAppScreenHeight()}"
+                0 -> dimensionRatio = "V,${ScreenUtils.getScreenWidth()}:${ScreenUtils.getScreenHeight()}"
                 1 -> dimensionRatio = "H,16:9"
                 2 -> dimensionRatio = "H,4:3"
             }
@@ -277,14 +251,32 @@ class CameraActivity : BaseBindingActivity<ActivityCameraBinding>() {
         val preview = Preview.Builder().setTargetAspectRatio(quality.getAspectRatio(quality)).build()
             .apply { setSurfaceProvider(binding.previewView.surfaceProvider) }
 
+        // Set up the image analysis use case which will process frames in real time
+//        val imageAnalysis = ImageAnalysis.Builder().setTargetAspectRatio(AspectRatio.RATIO_4_3)
+//            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+//            .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888).build()
+
+//        val imageAnalysis= imageAnalysis.setAnalyzer(mainThreadExecutor) { image ->
+//            image.cropRect.set(0, 0, 100, 100)
+//        }
+
+        val imageAnalyzer = ImageAnalysis.Builder().build()
+            .also {
+                it.setAnalyzer(
+                    mainThreadExecutor
+                ) { luma ->
+                    Log.d(TAG, "Average luminosity: $luma")
+                }
+            }
+
+
         val recorder = Recorder.Builder().setQualitySelector(qualitySelector).build()
+
         videoCapture = VideoCapture.withOutput(recorder)
-
-
 
         try {
             cameraProvider.unbindAll()
-            cameraProvider.bindToLifecycle(this, cameraSelector!!, videoCapture, preview)
+            cameraProvider.bindToLifecycle(this, cameraSelector!!, preview, imageAnalyzer, videoCapture)
         } catch (exc: Exception) {
             // 现在是在主线程，所以需要重置一下控件.
             Log.e(TAG, "Use case binding failed", exc)

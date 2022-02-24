@@ -67,4 +67,6 @@ dependencies {
     implementation 'com.github.angcyo.DslTablayout:TabLayout:2.0.2'
     // Android Tools
     implementation 'com.blankj:utilcodex:1.31.0'
+    // 透明状态栏
+    implementation 'com.geyifeng.immersionbar:immersionbar:3.2.1'
 }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import com.dylanc.viewbinding.base.ViewBindingUtil
+import com.gyf.immersionbar.ImmersionBar
 
 /**
  * author : Gredicer
@@ -17,6 +18,7 @@ abstract class BaseBindingActivity<VB : ViewBinding> : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ViewBindingUtil.inflateWithGeneric(this, layoutInflater)
         setContentView(binding.root)
+        ImmersionBar.with(this).transparentBar().init()
     }
 
 }
