@@ -32,6 +32,7 @@ import com.gredicer.camerastudy.databinding.ActivityCameraBinding
 import com.gredicer.camerastudy.extensions.getAspectRatio
 import com.gredicer.camerastudy.extensions.getNameString
 import com.gredicer.camerastudy.view.TipView
+import com.gredicer.schidentityapp.widget.TextDialogFragment
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -180,6 +181,16 @@ class CameraActivity : BaseBindingActivity<ActivityCameraBinding>() {
             }
         }
         captureLiveStatus.value = "不录制视频"
+
+
+        binding.btnRemainWord.setOnClickListener {
+            TextDialogFragment(this@CameraActivity).apply {
+                mContent = "asdasd"
+            }.show()
+        }
+
+
+
     }
 
 
@@ -251,24 +262,6 @@ class CameraActivity : BaseBindingActivity<ActivityCameraBinding>() {
         val preview = Preview.Builder().setTargetAspectRatio(quality.getAspectRatio(quality)).build()
             .apply { setSurfaceProvider(binding.previewView.surfaceProvider) }
 
-        // Set up the image analysis use case which will process frames in real time
-//        val imageAnalysis = ImageAnalysis.Builder().setTargetAspectRatio(AspectRatio.RATIO_4_3)
-//            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-//            .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888).build()
-
-//        val imageAnalysis= imageAnalysis.setAnalyzer(mainThreadExecutor) { image ->
-//            image.cropRect.set(0, 0, 100, 100)
-//        }
-
-        val imageAnalyzer = ImageAnalysis.Builder().build()
-            .also {
-                it.setAnalyzer(
-                    mainThreadExecutor
-                ) { luma ->
-                    Log.d(TAG, "Average luminosity: $luma")
-                }
-            }
-
 
         val recorder = Recorder.Builder().setQualitySelector(qualitySelector).build()
 
@@ -276,7 +269,7 @@ class CameraActivity : BaseBindingActivity<ActivityCameraBinding>() {
 
         try {
             cameraProvider.unbindAll()
-            cameraProvider.bindToLifecycle(this, cameraSelector!!, preview, imageAnalyzer, videoCapture)
+            cameraProvider.bindToLifecycle(this, cameraSelector!!, preview, videoCapture)
         } catch (exc: Exception) {
             // 现在是在主线程，所以需要重置一下控件.
             Log.e(TAG, "Use case binding failed", exc)

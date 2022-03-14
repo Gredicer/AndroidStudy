@@ -10,6 +10,9 @@ import com.gredicer.videostudy.base.BaseBindingActivity
 import com.gredicer.videostudy.databinding.ActivityMainBinding
 import com.gredicer.videostudy.ui.SurfaceViewActivity
 import com.gredicer.videostudy.ui.VideoViewActivity
+import com.hjq.permissions.OnPermissionCallback
+import com.hjq.permissions.Permission
+import com.hjq.permissions.XXPermissions
 
 
 class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
@@ -33,5 +36,19 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
             set.duration = 1500
             set.start()
         }
+
+
+        XXPermissions.with(this)
+            .permission(Permission.Group.STORAGE)
+            .request(object : OnPermissionCallback {
+                override fun onGranted(permissions: MutableList<String>, all: Boolean) {
+
+                }
+
+                override fun onDenied(permissions: MutableList<String>, never: Boolean) {}
+            })
     }
+
+
+
 }

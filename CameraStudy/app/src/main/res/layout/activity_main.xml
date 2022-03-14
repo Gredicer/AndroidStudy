@@ -10,10 +10,50 @@
         android:id="@+id/btn_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:text="拍摄界面"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintRight_toRightOf="parent" />
 
+    <Button
+        android:id="@+id/btn_remain_word"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="提词器"
+        app:layout_constraintBottom_toTopOf="@id/btn_camera"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/sb_speed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginBottom="10dp"
+        android:max="5"
+        android:progress="1"
+        android:min="1"
+        app:layout_constraintBottom_toTopOf="@id/sb_text_size"
+        tools:layout_editor_absoluteX="50dp" />
+
+    <SeekBar
+        android:id="@+id/sb_text_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginBottom="20dp"
+        android:max="100"
+        android:progress="0"
+        android:min="0"
+        app:layout_constraintBottom_toTopOf="@+id/btn_remain_word"
+        tools:layout_editor_absoluteX="50dp" />
+
+    <com.gredicer.camerastudy.view.TextScrollView
+        android:id="@+id/text_scroll_view"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

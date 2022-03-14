@@ -52,4 +52,7 @@ dependencies {
 
     implementation 'com.daimajia.easing:library:2.4@aar'
 
+    // XXPermissions
+    implementation 'com.github.getActivity:XXPermissions:13.5'
+
 }
