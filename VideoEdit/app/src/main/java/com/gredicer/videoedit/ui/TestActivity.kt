@@ -79,7 +79,7 @@ class TestActivity : BaseBindingActivity<ActivityTestBinding>(), MediaCodeFrameC
     }
 
     companion object {
-        val PATH: String = "/storage/emulated/0/1/VID_20220309_142148.mp4"
+        val PATH: String = "/storage/emulated/0/DCIM/Camera/VID_20220315_163916.mp4"
     }
 
 }

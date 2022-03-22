@@ -38,7 +38,7 @@ class EditActivity : BaseBindingActivity<ActivityEditBinding>() {
     private var endTime = System.currentTimeMillis()
 
     private val filePath1 = "/storage/emulated/0/1/VID_20220309_142148.mp4"
-    private val filePath2 = "/storage/emulated/0/1/result.mp4"
+//    private val filePath2 = "/storage/emulated/0/1/result.mp4"
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +46,7 @@ class EditActivity : BaseBindingActivity<ActivityEditBinding>() {
 
 
         // 设置视频资源 MediaExtractor，获取资源轨道数量
-        mediaExtractor.setDataSource(filePath2)
+        mediaExtractor.setDataSource(filePath1)
         val numTracks = mediaExtractor.trackCount
         // 遍历轨道，获取到 video 轨道的格式
         for (i in 0..numTracks) {
@@ -76,7 +76,7 @@ class EditActivity : BaseBindingActivity<ActivityEditBinding>() {
         // 视频总时间(us)，备注：1毫秒(ms) = 1000微秒(us)
         duration = videoFormat.getLong(MediaFormat.KEY_DURATION)
         totalCount = (duration / 1000 / 1000).toInt()
-        LogUtils.e("asd",totalCount)
+        LogUtils.e("asd", totalCount)
 
         mediaCodec = MediaCodec.createDecoderByType(videoFormat.getString(MediaFormat.KEY_MIME).toString())
         mediaCodec!!.setCallback(codecCallback)
@@ -144,13 +144,12 @@ class EditActivity : BaseBindingActivity<ActivityEditBinding>() {
             )
 
 //            LogUtils.e("asd-Size", size, mediaExtractor.sampleTime)
-            if (size < 0 || count >= totalCount) {
+            if (size < 0) {
                 mediaCodec.queueInputBuffer(inputBufferId, 0, 0, 0L, MediaCodec.BUFFER_FLAG_END_OF_STREAM)
                 endTime = System.currentTimeMillis()
                 LogUtils.e("zxc", "方法使用时间：${(endTime - startTime).toFloat() / 1000} s", "总次数$i")
             } else {
-                mediaExtractor.seekTo((count * 1000 * 1000).toLong(), MediaExtractor.SEEK_TO_CLOSEST_SYNC)
-                count++
+//                mediaExtractor.seekTo((count * 1000 * 1000).toLong(), MediaExtractor.SEEK_TO_CLOSEST_SYNC)
                 // 将此帧加入队列
                 mediaCodec.queueInputBuffer(inputBufferId, 0, size, ((count - 1) * 1000 * 1000).toLong(), 0)
                 // 进入下一帧

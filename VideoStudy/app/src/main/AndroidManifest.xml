@@ -27,7 +27,7 @@
         android:theme="@style/Theme.VideoStudy"
         tools:ignore="UnusedAttribute">
         <activity
-            android:name=".MutiVideoActivity"
+            android:name=".ui.MultiVideoActivity"
             android:exported="false" />
         <activity
             android:name=".ui.SurfaceViewActivity"

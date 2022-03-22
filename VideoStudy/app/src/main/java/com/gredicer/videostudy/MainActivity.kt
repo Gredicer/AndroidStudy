@@ -8,6 +8,7 @@ import com.daimajia.easing.Glider
 import com.daimajia.easing.Skill
 import com.gredicer.videostudy.base.BaseBindingActivity
 import com.gredicer.videostudy.databinding.ActivityMainBinding
+import com.gredicer.videostudy.ui.MultiVideoActivity
 import com.gredicer.videostudy.ui.SurfaceViewActivity
 import com.gredicer.videostudy.ui.VideoViewActivity
 import com.hjq.permissions.OnPermissionCallback
@@ -22,20 +23,20 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>() {
 
         binding.btnVideoView.setOnClickListener { startActivity(Intent(this, VideoViewActivity::class.java)) }
         binding.btnSurfaceView.setOnClickListener { startActivity(Intent(this, SurfaceViewActivity::class.java)) }
-
-        binding.test.setOnClickListener {
-            val set = AnimatorSet()
-            set.playTogether(
-                Glider.glide(
-                    Skill.CircEaseOut,
-                    1110f,
-                    ObjectAnimator.ofFloat(binding.test, "translationY", 0f, 500f)
-                )
-            )
-
-            set.duration = 1500
-            set.start()
-        }
+        binding.btnMultiVideo.setOnClickListener { startActivity(Intent(this, MultiVideoActivity::class.java)) }
+//        binding.test.setOnClickListener {
+//            val set = AnimatorSet()
+//            set.playTogether(
+//                Glider.glide(
+//                    Skill.CircEaseOut,
+//                    1110f,
+//                    ObjectAnimator.ofFloat(binding.test, "translationY", 0f, 500f)
+//                )
+//            )
+//
+//            set.duration = 1500
+//            set.start()
+//        }
 
 
         XXPermissions.with(this)
