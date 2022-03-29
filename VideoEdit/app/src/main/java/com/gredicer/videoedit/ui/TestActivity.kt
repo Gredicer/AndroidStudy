@@ -19,6 +19,7 @@ class TestActivity : BaseBindingActivity<ActivityTestBinding>(), MediaCodeFrameC
     private var mediaCodeFrameUtil: MediaCodeFrameUtil? = null
     private var startTime = System.currentTimeMillis()
     private var mAdapter = TestAdapter()
+
     // 当前RecyclerView的横向位置
     private var totalDx = 0
 
@@ -48,11 +49,6 @@ class TestActivity : BaseBindingActivity<ActivityTestBinding>(), MediaCodeFrameC
             })
         }
     }
-
-
-
-
-
 
 
     override fun onProgress(totalCount: Int, currentCount: Int) {
